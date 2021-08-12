@@ -32,6 +32,7 @@
 #include "ARMJIT_Memory.h"
 #endif
 
+#include "HWRegs.h"
 #include "DSi_NDMA.h"
 #include "DSi_I2C.h"
 #include "DSi_SD.h"
@@ -1804,27 +1805,64 @@ u8 ARM9IORead8(u32 addr)
 {
     switch (addr)
     {
-    case 0x04004000: return SCFG_BIOS & 0xFF;
-    case 0x04004006: return SCFG_RST  & 0xFF;
+      /* SCFG */
+      case HWREG_SCFG_BIOS: return SCFG_BIOS & 0xFF;
+      case HWREG_SCFG_CLOCK: return SCFG_Clock9  & 0xFF;
+      case HWREG_SCFG_CLOCK+1: return (SCFG_Clock9 >> 8) & 0xFF;
+      case HWREG_SCFG_RST: return SCFG_RST  & 0xFF;
+      CASE_READ8_32BIT(HWREG_SCFG_EXT, SCFG_EXT[0])
+      CASE_READ8_16BIT(HWREG_SCFG_MC, SCFG_MC)
 
-    CASE_READ8_32BIT(0x04004040, MBK[0][0])
-    CASE_READ8_32BIT(0x04004044, MBK[0][1])
-    CASE_READ8_32BIT(0x04004048, MBK[0][2])
-    CASE_READ8_32BIT(0x0400404C, MBK[0][3])
-    CASE_READ8_32BIT(0x04004050, MBK[0][4])
-    CASE_READ8_32BIT(0x04004054, MBK[0][5])
-    CASE_READ8_32BIT(0x04004058, MBK[0][6])
-    CASE_READ8_32BIT(0x0400405C, MBK[0][7])
-    CASE_READ8_32BIT(0x04004060, MBK[0][8])
+      /* NWRAM */
+      CASE_READ8_32BIT(HWREG_NWRAM_MBK(1), MBK[0][0])
+      CASE_READ8_32BIT(HWREG_NWRAM_MBK(2), MBK[0][1])
+      CASE_READ8_32BIT(HWREG_NWRAM_MBK(3), MBK[0][2])
+      CASE_READ8_32BIT(HWREG_NWRAM_MBK(4), MBK[0][3])
+      CASE_READ8_32BIT(HWREG_NWRAM_MBK(5), MBK[0][4])
+      CASE_READ8_32BIT(HWREG_NWRAM_MBK(6), MBK[0][5])
+      CASE_READ8_32BIT(HWREG_NWRAM_MBK(7), MBK[0][6])
+      CASE_READ8_32BIT(HWREG_NWRAM_MBK(8), MBK[0][7])
+      CASE_READ8_32BIT(HWREG_NWRAM_MBK(9), MBK[0][8])
+      
+      /* NDMA */
+      CASE_READ8_32BIT(HWREG_NDMA_CNT,  NDMACnt[0])      
+      CASE_READ8_32BIT(HWREG_NDMA_SRC(0),  NDMAs[0]->SrcAddr)
+      CASE_READ8_32BIT(HWREG_NDMA_DST(0),  NDMAs[0]->DstAddr)
+      CASE_READ8_32BIT(HWREG_NDMA_LEN(0),  NDMAs[0]->TotalLength)
+      CASE_READ8_32BIT(HWREG_NDMA_BLKLEN(0),  NDMAs[0]->BlockLength)
+      CASE_READ8_32BIT(HWREG_NDMA_TIMER(0),  NDMAs[0]->SubblockTimer)
+      CASE_READ8_32BIT(HWREG_NDMA_FILLDATA(0),  NDMAs[0]->FillData)
+      CASE_READ8_32BIT(HWREG_NDMA_CHANNELCNT(0),  NDMAs[0]->Cnt)
+      CASE_READ8_32BIT(HWREG_NDMA_SRC(1),  NDMAs[1]->SrcAddr)
+      CASE_READ8_32BIT(HWREG_NDMA_DST(1),  NDMAs[1]->DstAddr)
+      CASE_READ8_32BIT(HWREG_NDMA_LEN(1),  NDMAs[1]->TotalLength)
+      CASE_READ8_32BIT(HWREG_NDMA_BLKLEN(1),  NDMAs[1]->BlockLength)
+      CASE_READ8_32BIT(HWREG_NDMA_TIMER(1),  NDMAs[1]->SubblockTimer)
+      CASE_READ8_32BIT(HWREG_NDMA_FILLDATA(1),  NDMAs[1]->FillData)
+      CASE_READ8_32BIT(HWREG_NDMA_CHANNELCNT(1),  NDMAs[1]->Cnt)
+      CASE_READ8_32BIT(HWREG_NDMA_SRC(2),  NDMAs[2]->SrcAddr)
+      CASE_READ8_32BIT(HWREG_NDMA_DST(2),  NDMAs[2]->DstAddr)
+      CASE_READ8_32BIT(HWREG_NDMA_LEN(2),  NDMAs[2]->TotalLength)
+      CASE_READ8_32BIT(HWREG_NDMA_BLKLEN(2),  NDMAs[2]->BlockLength)
+      CASE_READ8_32BIT(HWREG_NDMA_TIMER(2),  NDMAs[2]->SubblockTimer)
+      CASE_READ8_32BIT(HWREG_NDMA_FILLDATA(2),  NDMAs[2]->FillData)
+      CASE_READ8_32BIT(HWREG_NDMA_CHANNELCNT(2),  NDMAs[2]->Cnt)
+      CASE_READ8_32BIT(HWREG_NDMA_SRC(3),  NDMAs[3]->SrcAddr)
+      CASE_READ8_32BIT(HWREG_NDMA_DST(3),  NDMAs[3]->DstAddr)
+      CASE_READ8_32BIT(HWREG_NDMA_LEN(3),  NDMAs[3]->TotalLength)
+      CASE_READ8_32BIT(HWREG_NDMA_BLKLEN(3),  NDMAs[3]->BlockLength)
+      CASE_READ8_32BIT(HWREG_NDMA_TIMER(3),  NDMAs[3]->SubblockTimer)
+      CASE_READ8_32BIT(HWREG_NDMA_FILLDATA(3),  NDMAs[3]->FillData)
+      CASE_READ8_32BIT(HWREG_NDMA_CHANNELCNT(3),  NDMAs[3]->Cnt)
     }
 
-    if ((addr & 0xFFFFFF00) == 0x04004200)
+    if ((addr & 0xFFFFFF00) == HWREG_CAM_BASE)
     {
         if (!(SCFG_EXT[0] & (1<<17))) return 0;
         return DSi_Camera::Read8(addr);
     }
 
-    if (addr >= 0x04004300 && addr <= 0x04004400)
+    if ((addr & 0xFFFFFF00) == HWREG_DSP_BASE)
         return DSi_DSP::Read16(addr);
 
     return NDS::ARM9IORead8(addr);
@@ -1834,29 +1872,63 @@ u16 ARM9IORead16(u32 addr)
 {
     switch (addr)
     {
-    case 0x04004000: return SCFG_BIOS & 0xFF;
-    case 0x04004004: return SCFG_Clock9;
-    case 0x04004006: return SCFG_RST;
-    case 0x04004010: return SCFG_MC & 0xFFFF;
+      /* SCFG */
+      case HWREG_SCFG_BIOS: return SCFG_BIOS & 0xFF;
+      case HWREG_SCFG_CLOCK: return SCFG_Clock9;
+      case HWREG_SCFG_RST: return SCFG_RST;
+      CASE_READ16_32BIT(HWREG_SCFG_EXT, SCFG_EXT[0])
+      case HWREG_SCFG_MC: return SCFG_MC & 0xFFFF;
 
-    CASE_READ16_32BIT(0x04004040, MBK[0][0])
-    CASE_READ16_32BIT(0x04004044, MBK[0][1])
-    CASE_READ16_32BIT(0x04004048, MBK[0][2])
-    CASE_READ16_32BIT(0x0400404C, MBK[0][3])
-    CASE_READ16_32BIT(0x04004050, MBK[0][4])
-    CASE_READ16_32BIT(0x04004054, MBK[0][5])
-    CASE_READ16_32BIT(0x04004058, MBK[0][6])
-    CASE_READ16_32BIT(0x0400405C, MBK[0][7])
-    CASE_READ16_32BIT(0x04004060, MBK[0][8])
+      /* NWRAM */
+      CASE_READ16_32BIT(HWREG_NWRAM_MBK(1), MBK[0][0])
+      CASE_READ16_32BIT(HWREG_NWRAM_MBK(2), MBK[0][1])
+      CASE_READ16_32BIT(HWREG_NWRAM_MBK(3), MBK[0][2])
+      CASE_READ16_32BIT(HWREG_NWRAM_MBK(4), MBK[0][3])
+      CASE_READ16_32BIT(HWREG_NWRAM_MBK(5), MBK[0][4])
+      CASE_READ16_32BIT(HWREG_NWRAM_MBK(6), MBK[0][5])
+      CASE_READ16_32BIT(HWREG_NWRAM_MBK(7), MBK[0][6])
+      CASE_READ16_32BIT(HWREG_NWRAM_MBK(8), MBK[0][7])
+      CASE_READ16_32BIT(HWREG_NWRAM_MBK(9), MBK[0][8])
+
+      /* NDMA */
+      CASE_READ16_32BIT(HWREG_NDMA_CNT,  NDMACnt[0])      
+      CASE_READ16_32BIT(HWREG_NDMA_SRC(0),  NDMAs[0]->SrcAddr)
+      CASE_READ16_32BIT(HWREG_NDMA_DST(0),  NDMAs[0]->DstAddr)
+      CASE_READ16_32BIT(HWREG_NDMA_LEN(0),  NDMAs[0]->TotalLength)
+      CASE_READ16_32BIT(HWREG_NDMA_BLKLEN(0),  NDMAs[0]->BlockLength)
+      CASE_READ16_32BIT(HWREG_NDMA_TIMER(0),  NDMAs[0]->SubblockTimer)
+      CASE_READ16_32BIT(HWREG_NDMA_FILLDATA(0),  NDMAs[0]->FillData)
+      CASE_READ16_32BIT(HWREG_NDMA_CHANNELCNT(0),  NDMAs[0]->Cnt)
+      CASE_READ16_32BIT(HWREG_NDMA_SRC(1),  NDMAs[1]->SrcAddr)
+      CASE_READ16_32BIT(HWREG_NDMA_DST(1),  NDMAs[1]->DstAddr)
+      CASE_READ16_32BIT(HWREG_NDMA_LEN(1),  NDMAs[1]->TotalLength)
+      CASE_READ16_32BIT(HWREG_NDMA_BLKLEN(1),  NDMAs[1]->BlockLength)
+      CASE_READ16_32BIT(HWREG_NDMA_TIMER(1),  NDMAs[1]->SubblockTimer)
+      CASE_READ16_32BIT(HWREG_NDMA_FILLDATA(1),  NDMAs[1]->FillData)
+      CASE_READ16_32BIT(HWREG_NDMA_CHANNELCNT(1),  NDMAs[1]->Cnt)
+      CASE_READ16_32BIT(HWREG_NDMA_SRC(2),  NDMAs[2]->SrcAddr)
+      CASE_READ16_32BIT(HWREG_NDMA_DST(2),  NDMAs[2]->DstAddr)
+      CASE_READ16_32BIT(HWREG_NDMA_LEN(2),  NDMAs[2]->TotalLength)
+      CASE_READ16_32BIT(HWREG_NDMA_BLKLEN(2),  NDMAs[2]->BlockLength)
+      CASE_READ16_32BIT(HWREG_NDMA_TIMER(2),  NDMAs[2]->SubblockTimer)
+      CASE_READ16_32BIT(HWREG_NDMA_FILLDATA(2),  NDMAs[2]->FillData)
+      CASE_READ16_32BIT(HWREG_NDMA_CHANNELCNT(2),  NDMAs[2]->Cnt)
+      CASE_READ16_32BIT(HWREG_NDMA_SRC(3),  NDMAs[3]->SrcAddr)
+      CASE_READ16_32BIT(HWREG_NDMA_DST(3),  NDMAs[3]->DstAddr)
+      CASE_READ16_32BIT(HWREG_NDMA_LEN(3),  NDMAs[3]->TotalLength)
+      CASE_READ16_32BIT(HWREG_NDMA_BLKLEN(3),  NDMAs[3]->BlockLength)
+      CASE_READ16_32BIT(HWREG_NDMA_TIMER(3),  NDMAs[3]->SubblockTimer)
+      CASE_READ16_32BIT(HWREG_NDMA_FILLDATA(3),  NDMAs[3]->FillData)
+      CASE_READ16_32BIT(HWREG_NDMA_CHANNELCNT(3),  NDMAs[3]->Cnt)
     }
 
-    if ((addr & 0xFFFFFF00) == 0x04004200)
+    if ((addr & 0xFFFFFF00) == HWREG_CAM_BASE)
     {
         if (!(SCFG_EXT[0] & (1<<17))) return 0;
         return DSi_Camera::Read16(addr);
     }
 
-    if (addr >= 0x04004300 && addr <= 0x04004400)
+    if ((addr & 0xFFFFFF00) == HWREG_DSP_BASE)
         return DSi_DSP::Read32(addr);
 
     return NDS::ARM9IORead16(addr);
@@ -1866,53 +1938,57 @@ u32 ARM9IORead32(u32 addr)
 {
     switch (addr)
     {
-    case 0x04004000: return SCFG_BIOS & 0xFF;
-    case 0x04004004: return SCFG_Clock9 | ((u32)SCFG_RST << 16);
-    case 0x04004008: return SCFG_EXT[0];
-    case 0x04004010: return SCFG_MC & 0xFFFF;
+      /* SCFG */
+      case HWREG_SCFG_BIOS: return SCFG_BIOS & 0xFF;
+      case HWREG_SCFG_CLOCK: return SCFG_Clock9 | ((u32)SCFG_RST << 16);
+      case HWREG_SCFG_EXT: return SCFG_EXT[0];
+      case HWREG_SCFG_MC: return SCFG_MC & 0xFFFF;
 
-    case 0x04004040: return MBK[0][0];
-    case 0x04004044: return MBK[0][1];
-    case 0x04004048: return MBK[0][2];
-    case 0x0400404C: return MBK[0][3];
-    case 0x04004050: return MBK[0][4];
-    case 0x04004054: return MBK[0][5];
-    case 0x04004058: return MBK[0][6];
-    case 0x0400405C: return MBK[0][7];
-    case 0x04004060: return MBK[0][8];
+      /* NWRAM */
+      case HWREG_NWRAM_MBK(1): return MBK[0][0];
+      case HWREG_NWRAM_MBK(2): return MBK[0][1];
+      case HWREG_NWRAM_MBK(3): return MBK[0][2];
+      case HWREG_NWRAM_MBK(4): return MBK[0][3];
+      case HWREG_NWRAM_MBK(5): return MBK[0][4];
+      case HWREG_NWRAM_MBK(6): return MBK[0][5];
+      case HWREG_NWRAM_MBK(7): return MBK[0][6];
+      case HWREG_NWRAM_MBK(8): return MBK[0][7];
+      case HWREG_NWRAM_MBK(9): return MBK[0][8];
 
-    case 0x04004100: return NDMACnt[0];
-    case 0x04004104: return NDMAs[0]->SrcAddr;
-    case 0x04004108: return NDMAs[0]->DstAddr;
-    case 0x0400410C: return NDMAs[0]->TotalLength;
-    case 0x04004110: return NDMAs[0]->BlockLength;
-    case 0x04004114: return NDMAs[0]->SubblockTimer;
-    case 0x04004118: return NDMAs[0]->FillData;
-    case 0x0400411C: return NDMAs[0]->Cnt;
-    case 0x04004120: return NDMAs[1]->SrcAddr;
-    case 0x04004124: return NDMAs[1]->DstAddr;
-    case 0x04004128: return NDMAs[1]->TotalLength;
-    case 0x0400412C: return NDMAs[1]->BlockLength;
-    case 0x04004130: return NDMAs[1]->SubblockTimer;
-    case 0x04004134: return NDMAs[1]->FillData;
-    case 0x04004138: return NDMAs[1]->Cnt;
-    case 0x0400413C: return NDMAs[2]->SrcAddr;
-    case 0x04004140: return NDMAs[2]->DstAddr;
-    case 0x04004144: return NDMAs[2]->TotalLength;
-    case 0x04004148: return NDMAs[2]->BlockLength;
-    case 0x0400414C: return NDMAs[2]->SubblockTimer;
-    case 0x04004150: return NDMAs[2]->FillData;
-    case 0x04004154: return NDMAs[2]->Cnt;
-    case 0x04004158: return NDMAs[3]->SrcAddr;
-    case 0x0400415C: return NDMAs[3]->DstAddr;
-    case 0x04004160: return NDMAs[3]->TotalLength;
-    case 0x04004164: return NDMAs[3]->BlockLength;
-    case 0x04004168: return NDMAs[3]->SubblockTimer;
-    case 0x0400416C: return NDMAs[3]->FillData;
-    case 0x04004170: return NDMAs[3]->Cnt;
+      /* NDMA */
+      case HWREG_NDMA_CNT:            return NDMACnt[0];
+      case HWREG_NDMA_SRC(0):         return NDMAs[0]->SrcAddr;
+      case HWREG_NDMA_DST(0):         return NDMAs[0]->DstAddr;
+      case HWREG_NDMA_LEN(0):         return NDMAs[0]->TotalLength;
+      case HWREG_NDMA_BLKLEN(0):      return NDMAs[0]->BlockLength;
+      case HWREG_NDMA_TIMER(0):       return NDMAs[0]->SubblockTimer;
+      case HWREG_NDMA_FILLDATA(0):    return NDMAs[0]->FillData;
+      case HWREG_NDMA_CHANNELCNT(0):  return NDMAs[0]->Cnt;
+      case HWREG_NDMA_SRC(1):         return NDMAs[1]->SrcAddr;
+      case HWREG_NDMA_DST(1):         return NDMAs[1]->DstAddr;
+      case HWREG_NDMA_LEN(1):         return NDMAs[1]->TotalLength;
+      case HWREG_NDMA_BLKLEN(1):      return NDMAs[1]->BlockLength;
+      case HWREG_NDMA_TIMER(1):       return NDMAs[1]->SubblockTimer;
+      case HWREG_NDMA_FILLDATA(1):    return NDMAs[1]->FillData;
+      case HWREG_NDMA_CHANNELCNT(1):  return NDMAs[1]->Cnt;
+      case HWREG_NDMA_SRC(2):         return NDMAs[2]->SrcAddr;
+      case HWREG_NDMA_DST(2):         return NDMAs[2]->DstAddr;
+      case HWREG_NDMA_LEN(2):         return NDMAs[2]->TotalLength;
+      case HWREG_NDMA_BLKLEN(2):      return NDMAs[2]->BlockLength;
+      case HWREG_NDMA_TIMER(2):       return NDMAs[2]->SubblockTimer;
+      case HWREG_NDMA_FILLDATA(2):    return NDMAs[2]->FillData;
+      case HWREG_NDMA_CHANNELCNT(2):  return NDMAs[2]->Cnt;
+      case HWREG_NDMA_SRC(3):         return NDMAs[3]->SrcAddr;
+      case HWREG_NDMA_DST(3):         return NDMAs[3]->DstAddr;
+      case HWREG_NDMA_LEN(3):         return NDMAs[3]->TotalLength;
+      case HWREG_NDMA_BLKLEN(3):      return NDMAs[3]->BlockLength;
+      case HWREG_NDMA_TIMER(3):       return NDMAs[3]->SubblockTimer;
+      case HWREG_NDMA_FILLDATA(3):    return NDMAs[3]->FillData;
+      case HWREG_NDMA_CHANNELCNT(3):  return NDMAs[3]->Cnt;
+    
     }
 
-    if ((addr & 0xFFFFFF00) == 0x04004200)
+    if ((addr & 0xFFFFFF00) == HWREG_CAM_BASE)
     {
         if (!(SCFG_EXT[0] & (1<<17))) return 0;
         return DSi_Camera::Read32(addr);
@@ -1925,64 +2001,72 @@ void ARM9IOWrite8(u32 addr, u8 val)
 {
     switch (addr)
     {
-    case 0x04000301:
-        // TODO: OPTIONAL PERFORMANCE HACK
-        // the DSi ARM9 BIOS has a bug where the IRQ wait function attempts to use (ARM7-only) HALTCNT
-        // effectively causing it to wait in a busy loop.
-        // for better DSi performance, we can implement an actual IRQ wait here.
-        // in practice this would only matter when running DS software in DSi mode (ie already a hack).
-        // DSi software does not use the BIOS IRQ wait function.
-        //if (val == 0x80 && NDS::ARM9->R[15] == 0xFFFF0268) NDS::ARM9->Halt(1);
-        return;
+      case 0x04000301:
+          // TODO: OPTIONAL PERFORMANCE HACK
+          // the DSi ARM9 BIOS has a bug where the IRQ wait function attempts to use (ARM7-only) HALTCNT
+          // effectively causing it to wait in a busy loop.
+          // for better DSi performance, we can implement an actual IRQ wait here.
+          // in practice this would only matter when running DS software in DSi mode (ie already a hack).
+          // DSi software does not use the BIOS IRQ wait function.
+          //if (val == 0x80 && NDS::ARM9->R[15] == 0xFFFF0268) NDS::ARM9->Halt(1);
+          return;
 
-    case 0x04004006:
-        if (!(SCFG_EXT[1] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+        /* SCFG */
+        case HWREG_SCFG_BIOS: return ; // prevent "unknwon register" warning
+        case HWREG_SCFG_BIOS+1: return ; // prevent "unknwon register" warning
+        case HWREG_SCFG_BIOS+2: return ; // prevent "unknwon register" warning
+        case HWREG_SCFG_BIOS+3: return ; // prevent "unknwon register" warning
+        
+        case HWREG_SCFG_CLOCK:
+            return ARM9IOWrite32(HWREG_SCFG_CLOCK, (SCFG_Clock9 & ~0xff) | val) ;         
+        case HWREG_SCFG_CLOCK+1:
+            return ARM9IOWrite32(HWREG_SCFG_CLOCK, (SCFG_Clock9 & ~0xff00) | (val << 8)) ;
+         
+        case HWREG_SCFG_RST:
+            if (!(SCFG_EXT[1] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                return;
+            SCFG_RST = (SCFG_RST & 0xFF00) | val;
+            DSi_DSP::SetRstLine(val & 1);
             return;
-        SCFG_RST = (SCFG_RST & 0xFF00) | val;
-        DSi_DSP::SetRstLine(val & 1);
-        return;
+          case HWREG_SCFG_RST+1:
+            return;
+            
+         case HWREG_SCFG_EXT:
+            return ARM9IOWrite32(HWREG_SCFG_EXT, ((SCFG_EXT[0] | SCFG_EXT[1]) & ~0xff) | val) ;         
+         case HWREG_SCFG_EXT+1:
+            return ARM9IOWrite32(HWREG_SCFG_EXT, ((SCFG_EXT[0] | SCFG_EXT[1]) & ~0xff00) | (val << 8)) ;
+         case HWREG_SCFG_EXT+2:
+            return ARM9IOWrite32(HWREG_SCFG_EXT, ((SCFG_EXT[0] | SCFG_EXT[1]) & ~0xff0000) | (val << 16)) ;
+         case HWREG_SCFG_EXT+3:
+            return ARM9IOWrite32(HWREG_SCFG_EXT, ((SCFG_EXT[0] | SCFG_EXT[1]) & ~0xff000000) | (val << 24)) ;
 
-    case 0x04004040:
-    case 0x04004041:
-    case 0x04004042:
-    case 0x04004043:
-        if (!(SCFG_EXT[1] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+        /* NWRAM */
+        HWREG32_CASES_8(HWREG_NWRAM_MBK(1))
+            if (!(SCFG_EXT[1] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                return;
+            MapNWRAM_A(addr & 3, val);
             return;
-        MapNWRAM_A(addr & 3, val);
-        return;
-    case 0x04004044:
-    case 0x04004045:
-    case 0x04004046:
-    case 0x04004047:
-    case 0x04004048:
-    case 0x04004049:
-    case 0x0400404A:
-    case 0x0400404B:
-        if (!(SCFG_EXT[1] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+        HWREG32_CASES_8(HWREG_NWRAM_MBK(2))
+        HWREG32_CASES_8(HWREG_NWRAM_MBK(3))
+            if (!(SCFG_EXT[1] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                return;
+            MapNWRAM_B((addr - 0x04) & 7, val);
             return;
-        MapNWRAM_B((addr - 0x04) & 7, val);
-        return;
-    case 0x0400404C:
-    case 0x0400404D:
-    case 0x0400404E:
-    case 0x0400404F:
-    case 0x04004050:
-    case 0x04004051:
-    case 0x04004052:
-    case 0x04004053:
-        if (!(SCFG_EXT[1] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+        HWREG32_CASES_8(HWREG_NWRAM_MBK(4))
+        HWREG32_CASES_8(HWREG_NWRAM_MBK(5))
+            if (!(SCFG_EXT[1] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                return;
+            MapNWRAM_C((addr-0x0C) & 7, val);
             return;
-        MapNWRAM_C((addr-0x0C) & 7, val);
-        return;
     }
 
-    if ((addr & 0xFFFFFF00) == 0x04004200)
+    if ((addr & 0xFFFFFF00) == HWREG_CAM_BASE)
     {
         if (!(SCFG_EXT[0] & (1<<17))) return;
         return DSi_Camera::Write8(addr, val);
     }
 
-    if (addr >= 0x04004300 && addr <= 0x04004400)
+    if ((addr & 0xFFFFFF00) == HWREG_DSP_BASE)
     {
         DSi_DSP::Write8(addr, val);
         return;
@@ -1995,54 +2079,59 @@ void ARM9IOWrite16(u32 addr, u16 val)
 {
     switch (addr)
     {
-    case 0x04004004:
-        if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+        /* SCFG */
+        case HWREG_SCFG_BIOS: return ; // prevent "unknwon register" warning
+        case HWREG_SCFG_BIOS+2: return ; // prevent "unknwon register" warning
+        case HWREG_SCFG_CLOCK:
+            if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                return;
+            Set_SCFG_Clock9(val);
             return;
-        Set_SCFG_Clock9(val);
-        return;
 
-    case 0x04004006:
-        if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+        case HWREG_SCFG_RST:
+            if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                return;
+            SCFG_RST = val;
+            DSi_DSP::SetRstLine(val & 1);
             return;
-        SCFG_RST = val;
-        DSi_DSP::SetRstLine(val & 1);
-        return;
+            
+         case HWREG_SCFG_EXT:
+            return ARM9IOWrite32(HWREG_SCFG_EXT, ((SCFG_EXT[0] | SCFG_EXT[1]) & ~0xffff) | val) ;         
+         case HWREG_SCFG_EXT+2:
+            return ARM9IOWrite32(HWREG_SCFG_EXT, ((SCFG_EXT[0] | SCFG_EXT[1]) & ~0xffff0000) | (val << 16)) ;
 
-    case 0x04004040:
-    case 0x04004042:
-        if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
-            return;
-        MapNWRAM_A((addr & 2), val & 0xFF);
-        MapNWRAM_A((addr & 2) + 1, val >> 8);
-        return;
 
-    case 0x04004044:
-    case 0x04004046:
-    case 0x04004048:
-    case 0x0400404A:
-        if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+        /* NWRAM */
+        HWREG32_CASES_16(HWREG_NWRAM_MBK(1))
+            if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                return;
+            MapNWRAM_A((addr & 2), val & 0xFF);
+            MapNWRAM_A((addr & 2) + 1, val >> 8);
             return;
-        MapNWRAM_B(((addr - 0x04) & 6), val & 0xFF);
-        MapNWRAM_B(((addr - 0x04) & 6) + 1, val >> 8);
-        return;
-    case 0x0400404C:
-    case 0x0400404E:
-    case 0x04004050:
-    case 0x04004052:
-        if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+
+        HWREG32_CASES_16(HWREG_NWRAM_MBK(2))
+        HWREG32_CASES_16(HWREG_NWRAM_MBK(3))
+            if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                return;
+            MapNWRAM_B(((addr - 0x04) & 6), val & 0xFF);
+            MapNWRAM_B(((addr - 0x04) & 6) + 1, val >> 8);
             return;
-        MapNWRAM_C(((addr - 0x0C) & 6), val & 0xFF);
-        MapNWRAM_C(((addr - 0x0C) & 6) + 1, val >> 8);
-        return;
+        HWREG32_CASES_16(HWREG_NWRAM_MBK(4))
+        HWREG32_CASES_16(HWREG_NWRAM_MBK(5))
+            if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                return;
+            MapNWRAM_C(((addr - 0x0C) & 6), val & 0xFF);
+            MapNWRAM_C(((addr - 0x0C) & 6) + 1, val >> 8);
+            return;
     }
 
-    if ((addr & 0xFFFFFF00) == 0x04004200)
+    if ((addr & 0xFFFFFF00) == HWREG_CAM_BASE)
     {
         if (!(SCFG_EXT[0] & (1<<17))) return;
         return DSi_Camera::Write16(addr, val);
     }
 
-    if (addr >= 0x04004300 && addr <= 0x04004400)
+    if ((addr & 0xFFFFFF00) == HWREG_DSP_BASE)
     {
         DSi_DSP::Write16(addr, val);
         return;
@@ -2055,141 +2144,154 @@ void ARM9IOWrite32(u32 addr, u32 val)
 {
     switch (addr)
     {
-    case 0x04004004:
-        if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
-            return;
-        Set_SCFG_Clock9(val & 0xFFFF);
-        SCFG_RST = val >> 16;
-        DSi_DSP::SetRstLine((val >> 16) & 1);
-        break;
+      /* SCFG */    
+      case HWREG_SCFG_BIOS: return ; // prevent "unknwon register" warning
+      case HWREG_SCFG_CLOCK:
+          if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+              return;
+          Set_SCFG_Clock9(val & 0xFFFF);
+          SCFG_RST = val >> 16;
+          DSi_DSP::SetRstLine((val >> 16) & 1);
+          return;
 
-    case 0x04004008:
-        {
+      case HWREG_SCFG_EXT:
+          {
+              if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                  return;
+              u32 oldram = (SCFG_EXT[0] >> 14) & 0x3;
+              u32 newram = (val >> 14) & 0x3;
+
+              SCFG_EXT[0] &= ~0x8007F19F;
+              SCFG_EXT[0] |= (val & 0x8007F19F);
+              SCFG_EXT[1] &= ~0x0000F080;
+              SCFG_EXT[1] |= (val & 0x0000F080);
+              printf("SCFG_EXT = %08X / %08X (val9 %08X)\n", SCFG_EXT[0], SCFG_EXT[1], val);
+              /*switch ((SCFG_EXT[0] >> 14) & 0x3)
+              {
+              case 0:
+              case 1:
+                  NDS::MainRAMMask = 0x3FFFFF;
+                  printf("RAM: 4MB\n");
+                  //baziderp=true;
+                  break;
+              case 2:
+              case 3: // TODO: debug console w/ 32MB?
+                  NDS::MainRAMMask = 0xFFFFFF;
+                  printf("RAM: 16MB\n");
+                  break;
+              }*/
+              // HAX!!
+              // a change to the RAM size setting is supposed to apply immediately (it does so on hardware)
+              // however, doing so will cause DS-mode app startup to break, because the change happens while the ARM7
+              // is still busy clearing/relocating shit
+              //if (newram != oldram)
+              //    NDS::ScheduleEvent(NDS::Event_DSi_RAMSizeChange, false, 512*512*512, ApplyNewRAMSize, newram);
+              printf("from %08X, ARM7 %08X, %08X\n", NDS::GetPC(0), NDS::GetPC(1), NDS::ARM7->R[1]);
+          }
+          return;
+
+        /* NWRAM */
+        case HWREG_NWRAM_MBK(1):
             if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
                 return;
-            u32 oldram = (SCFG_EXT[0] >> 14) & 0x3;
-            u32 newram = (val >> 14) & 0x3;
-
-            SCFG_EXT[0] &= ~0x8007F19F;
-            SCFG_EXT[0] |= (val & 0x8007F19F);
-            SCFG_EXT[1] &= ~0x0000F080;
-            SCFG_EXT[1] |= (val & 0x0000F080);
-            printf("SCFG_EXT = %08X / %08X (val9 %08X)\n", SCFG_EXT[0], SCFG_EXT[1], val);
-            /*switch ((SCFG_EXT[0] >> 14) & 0x3)
-            {
-            case 0:
-            case 1:
-                NDS::MainRAMMask = 0x3FFFFF;
-                printf("RAM: 4MB\n");
-                //baziderp=true;
-                break;
-            case 2:
-            case 3: // TODO: debug console w/ 32MB?
-                NDS::MainRAMMask = 0xFFFFFF;
-                printf("RAM: 16MB\n");
-                break;
-            }*/
-            // HAX!!
-            // a change to the RAM size setting is supposed to apply immediately (it does so on hardware)
-            // however, doing so will cause DS-mode app startup to break, because the change happens while the ARM7
-            // is still busy clearing/relocating shit
-            //if (newram != oldram)
-            //    NDS::ScheduleEvent(NDS::Event_DSi_RAMSizeChange, false, 512*512*512, ApplyNewRAMSize, newram);
-            printf("from %08X, ARM7 %08X, %08X\n", NDS::GetPC(0), NDS::GetPC(1), NDS::ARM7->R[1]);
-        }
-        return;
-
-    case 0x04004040:
-        if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+            MapNWRAM_A(0, val & 0xFF);
+            MapNWRAM_A(1, (val >> 8) & 0xFF);
+            MapNWRAM_A(2, (val >> 16) & 0xFF);
+            MapNWRAM_A(3, val >> 24);
             return;
-        MapNWRAM_A(0, val & 0xFF);
-        MapNWRAM_A(1, (val >> 8) & 0xFF);
-        MapNWRAM_A(2, (val >> 16) & 0xFF);
-        MapNWRAM_A(3, val >> 24);
-        return;
-    case 0x04004044:
-        if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+        case HWREG_NWRAM_MBK(2):
+            if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                return;
+            MapNWRAM_B(0, val & 0xFF);
+            MapNWRAM_B(1, (val >> 8) & 0xFF);
+            MapNWRAM_B(2, (val >> 16) & 0xFF);
+            MapNWRAM_B(3, val >> 24);
             return;
-        MapNWRAM_B(0, val & 0xFF);
-        MapNWRAM_B(1, (val >> 8) & 0xFF);
-        MapNWRAM_B(2, (val >> 16) & 0xFF);
-        MapNWRAM_B(3, val >> 24);
-        return;
-    case 0x04004048:
-        if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+        case HWREG_NWRAM_MBK(3):
+            if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                return;
+            MapNWRAM_B(4, val & 0xFF);
+            MapNWRAM_B(5, (val >> 8) & 0xFF);
+            MapNWRAM_B(6, (val >> 16) & 0xFF);
+            MapNWRAM_B(7, val >> 24);
             return;
-        MapNWRAM_B(4, val & 0xFF);
-        MapNWRAM_B(5, (val >> 8) & 0xFF);
-        MapNWRAM_B(6, (val >> 16) & 0xFF);
-        MapNWRAM_B(7, val >> 24);
-        return;
-    case 0x0400404C:
-        if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+        case HWREG_NWRAM_MBK(4):
+            if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                return;
+            MapNWRAM_C(0, val & 0xFF);
+            MapNWRAM_C(1, (val >> 8) & 0xFF);
+            MapNWRAM_C(2, (val >> 16) & 0xFF);
+            MapNWRAM_C(3, val >> 24);
             return;
-        MapNWRAM_C(0, val & 0xFF);
-        MapNWRAM_C(1, (val >> 8) & 0xFF);
-        MapNWRAM_C(2, (val >> 16) & 0xFF);
-        MapNWRAM_C(3, val >> 24);
-        return;
-    case 0x04004050:
-        if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+        case HWREG_NWRAM_MBK(5):
+            if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                return;
+            MapNWRAM_C(4, val & 0xFF);
+            MapNWRAM_C(5, (val >> 8) & 0xFF);
+            MapNWRAM_C(6, (val >> 16) & 0xFF);
+            MapNWRAM_C(7, val >> 24);
             return;
-        MapNWRAM_C(4, val & 0xFF);
-        MapNWRAM_C(5, (val >> 8) & 0xFF);
-        MapNWRAM_C(6, (val >> 16) & 0xFF);
-        MapNWRAM_C(7, val >> 24);
-        return;
-    case 0x04004054: 
-        if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+        case HWREG_NWRAM_MBK(6):
+            if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                return;
+            MapNWRAMRange(0, 0, val);
             return;
-        MapNWRAMRange(0, 0, val);
-        return;
-    case 0x04004058: 
-        if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+        case HWREG_NWRAM_MBK(7): 
+            if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                return;
+            MapNWRAMRange(0, 1, val); 
             return;
-        MapNWRAMRange(0, 1, val); 
-        return;
-    case 0x0400405C: 
-        if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+        case HWREG_NWRAM_MBK(8):
+            if (!(SCFG_EXT[0] & (1 << 31))) /* no access to SCFG Registers if disabled*/
+                return;
+            MapNWRAMRange(0, 2, val);
             return;
-        MapNWRAMRange(0, 2, val);
-        return;
-
-    case 0x04004100: NDMACnt[0] = val & 0x800F0000; return;
-    case 0x04004104: NDMAs[0]->SrcAddr = val & 0xFFFFFFFC; return;
-    case 0x04004108: NDMAs[0]->DstAddr = val & 0xFFFFFFFC; return;
-    case 0x0400410C: NDMAs[0]->TotalLength = val & 0x0FFFFFFF; return;
-    case 0x04004110: NDMAs[0]->BlockLength = val & 0x00FFFFFF; return;
-    case 0x04004114: NDMAs[0]->SubblockTimer = val & 0x0003FFFF; return;
-    case 0x04004118: NDMAs[0]->FillData = val; return;
-    case 0x0400411C: NDMAs[0]->WriteCnt(val); return;
-    case 0x04004120: NDMAs[1]->SrcAddr = val & 0xFFFFFFFC; return;
-    case 0x04004124: NDMAs[1]->DstAddr = val & 0xFFFFFFFC; return;
-    case 0x04004128: NDMAs[1]->TotalLength = val & 0x0FFFFFFF; return;
-    case 0x0400412C: NDMAs[1]->BlockLength = val & 0x00FFFFFF; return;
-    case 0x04004130: NDMAs[1]->SubblockTimer = val & 0x0003FFFF; return;
-    case 0x04004134: NDMAs[1]->FillData = val; return;
-    case 0x04004138: NDMAs[1]->WriteCnt(val); return;
-    case 0x0400413C: NDMAs[2]->SrcAddr = val & 0xFFFFFFFC; return;
-    case 0x04004140: NDMAs[2]->DstAddr = val & 0xFFFFFFFC; return;
-    case 0x04004144: NDMAs[2]->TotalLength = val & 0x0FFFFFFF; return;
-    case 0x04004148: NDMAs[2]->BlockLength = val & 0x00FFFFFF; return;
-    case 0x0400414C: NDMAs[2]->SubblockTimer = val & 0x0003FFFF; return;
-    case 0x04004150: NDMAs[2]->FillData = val; return;
-    case 0x04004154: NDMAs[2]->WriteCnt(val); return;
-    case 0x04004158: NDMAs[3]->SrcAddr = val & 0xFFFFFFFC; return;
-    case 0x0400415C: NDMAs[3]->DstAddr = val & 0xFFFFFFFC; return;
-    case 0x04004160: NDMAs[3]->TotalLength = val & 0x0FFFFFFF; return;
-    case 0x04004164: NDMAs[3]->BlockLength = val & 0x00FFFFFF; return;
-    case 0x04004168: NDMAs[3]->SubblockTimer = val & 0x0003FFFF; return;
-    case 0x0400416C: NDMAs[3]->FillData = val; return;
-    case 0x04004170: NDMAs[3]->WriteCnt(val); return;
+        case HWREG_NWRAM_MBK(9): return ; // prevent "unknwon register" warning
+        
+        
+        /* NDMA */
+        case HWREG_NDMA_CNT: NDMACnt[0] = val & 0x800F0000; return;
+        case HWREG_NDMA_SRC(0):         NDMAs[0]->SrcAddr = val & 0xFFFFFFFC; return;
+        case HWREG_NDMA_DST(0):         NDMAs[0]->DstAddr = val & 0xFFFFFFFC; return;
+        case HWREG_NDMA_LEN(0):         NDMAs[0]->TotalLength = val & 0x0FFFFFFF; return;
+        case HWREG_NDMA_BLKLEN(0):      NDMAs[0]->BlockLength = val & 0x00FFFFFF; return;
+        case HWREG_NDMA_TIMER(0):       NDMAs[0]->SubblockTimer = val & 0x0003FFFF; return;
+        case HWREG_NDMA_FILLDATA(0):    NDMAs[0]->FillData = val; return;
+        case HWREG_NDMA_CHANNELCNT(0):  NDMAs[0]->WriteCnt(val); return;
+        case HWREG_NDMA_SRC(1):         NDMAs[1]->SrcAddr = val & 0xFFFFFFFC; return;
+        case HWREG_NDMA_DST(1):         NDMAs[1]->DstAddr = val & 0xFFFFFFFC; return;
+        case HWREG_NDMA_LEN(1):         NDMAs[1]->TotalLength = val & 0x0FFFFFFF; return;
+        case HWREG_NDMA_BLKLEN(1):      NDMAs[1]->BlockLength = val & 0x00FFFFFF; return;
+        case HWREG_NDMA_TIMER(1):       NDMAs[1]->SubblockTimer = val & 0x0003FFFF; return;
+        case HWREG_NDMA_FILLDATA(1):    NDMAs[1]->FillData = val; return;
+        case HWREG_NDMA_CHANNELCNT(1):  NDMAs[1]->WriteCnt(val); return;
+        case HWREG_NDMA_SRC(2):         NDMAs[2]->SrcAddr = val & 0xFFFFFFFC; return;
+        case HWREG_NDMA_DST(2):         NDMAs[2]->DstAddr = val & 0xFFFFFFFC; return;
+        case HWREG_NDMA_LEN(2):         NDMAs[2]->TotalLength = val & 0x0FFFFFFF; return;
+        case HWREG_NDMA_BLKLEN(2):      NDMAs[2]->BlockLength = val & 0x00FFFFFF; return;
+        case HWREG_NDMA_TIMER(2):       NDMAs[2]->SubblockTimer = val & 0x0003FFFF; return;
+        case HWREG_NDMA_FILLDATA(2):    NDMAs[2]->FillData = val; return;
+        case HWREG_NDMA_CHANNELCNT(2):  NDMAs[2]->WriteCnt(val); return;
+        case HWREG_NDMA_SRC(3):         NDMAs[3]->SrcAddr = val & 0xFFFFFFFC; return;
+        case HWREG_NDMA_DST(3):         NDMAs[3]->DstAddr = val & 0xFFFFFFFC; return;
+        case HWREG_NDMA_LEN(3):         NDMAs[3]->TotalLength = val & 0x0FFFFFFF; return;
+        case HWREG_NDMA_BLKLEN(3):      NDMAs[3]->BlockLength = val & 0x00FFFFFF; return;
+        case HWREG_NDMA_TIMER(3):       NDMAs[3]->SubblockTimer = val & 0x0003FFFF; return;
+        case HWREG_NDMA_FILLDATA(3):    NDMAs[3]->FillData = val; return;
+        case HWREG_NDMA_CHANNELCNT(3):  NDMAs[3]->WriteCnt(val); return;
     }
 
-    if ((addr & 0xFFFFFF00) == 0x04004200)
+    if ((addr & 0xFFFFFF00) == HWREG_CAM_BASE)
     {
         if (!(SCFG_EXT[0] & (1<<17))) return;
         return DSi_Camera::Write32(addr, val);
+    }
+
+    if ((addr & 0xFFFFFF00) == HWREG_DSP_BASE)
+    {
+      // TODO: Check what happens on 32 bit writes excactly. For now ignore
+      // It was falling through to unknown access, but this one is known
+      return;
     }
 
     return NDS::ARM9IOWrite32(addr, val);
