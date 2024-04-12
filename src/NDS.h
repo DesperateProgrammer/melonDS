@@ -42,6 +42,7 @@
 #include "CRC32.h"
 #include "DMA.h"
 #include "FreeBIOS.h"
+#include "FIFO_Api.h"
 
 // when touching the main loop/timing code, pls test a lot of shit
 // with this enabled, to make sure it doesn't desync
@@ -488,6 +489,7 @@ private:
     u16 IPCFIFOCnt9, IPCFIFOCnt7;
     FIFO<u32, 16> IPCFIFO9; // FIFO in which the ARM9 writes
     FIFO<u32, 16> IPCFIFO7;
+    FIFOApi FifoApi;
     u16 DivCnt;
     alignas(u64) u32 DivNumerator[2];
     alignas(u64) u32 DivDenominator[2];

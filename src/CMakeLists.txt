@@ -29,6 +29,7 @@ add_library(core STATIC
     FATIO.cpp
     FATStorage.cpp
     FIFO.h
+    FIFO_Api.cpp
     GBACart.cpp
     GPU.cpp
     GPU2D.cpp

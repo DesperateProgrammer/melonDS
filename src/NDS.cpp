@@ -108,6 +108,7 @@ NDS::NDS(NDSArgs&& args, int type) noexcept :
 #ifdef JIT_ENABLED
     EnableJIT(args.JIT.has_value()),
 #endif
+    FifoApi(*this),
     DMAs {
         DMA(0, 0, *this),
         DMA(0, 1, *this),
@@ -3499,6 +3500,9 @@ void NDS::ARM9IOWrite32(u32 addr, u32 val)
         NDS::ARM9IOWrite16(addr, val);
         return;
     case 0x04000188:
+        if (FifoApi.ExecuteHook(0, val))
+            break;
+
         if (IPCFIFOCnt9 & 0x8000)
         {
             if (IPCFIFO9.IsFull())
@@ -4248,6 +4252,8 @@ void NDS::ARM7IOWrite32(u32 addr, u32 val)
         NDS::ARM7IOWrite16(addr, val);
         return;
     case 0x04000188:
+        if (FifoApi.ExecuteHook(1, val))
+            break;
         if (IPCFIFOCnt7 & 0x8000)
         {
             if (IPCFIFO7.IsFull())
